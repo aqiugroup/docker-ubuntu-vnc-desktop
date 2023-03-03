@@ -1,10 +1,14 @@
 .PHONY: build run
 
 # Default values for variables
-REPO  ?= dorowu/ubuntu-desktop-lxde-vnc
+# REPO  ?= dorowu/ubuntu-desktop-lxde-vnc
+REPO  ?= aqiuxx/vnc-ros-noetic-full2
+REPO_TEST  ?= aqiuxx/vnc-ros-noetic-full
 TAG   ?= latest
 # you can choose other base image versions
-IMAGE ?= ubuntu:20.04
+# IMAGE ?= ubuntu:20.04
+IMAGE ?= osrf/ros:noetic-desktop-full
+
 # IMAGE ?= nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 # choose from supported flavors (see available ones in ./flavors/*.yml)
 FLAVOR ?= lxde
@@ -24,19 +28,20 @@ run:
 	docker run --privileged --rm \
 		-p 6080:80 -p 6081:443 \
 		-v ${PWD}:/src:ro \
-		-e USER=doro -e PASSWORD=mypassword \
+		-e USER=aqiuxx -e PASSWORD=1 \
 		-e ALSADEV=hw:2,0 \
 		-e SSL_PORT=443 \
 		-e RELATIVE_URL_ROOT=approot \
 		-e OPENBOX_ARGS="--startup /usr/bin/galculator" \
 		-v ${PWD}/ssl:/etc/nginx/ssl \
+		-v /Users/aqiu/Documents/1_study/10_workspace/00_AllMyXX/AllMySlam/Slam-Course/slam_in_autonomous_driving:/home/aqiuxx/slam/sad \
 		--device /dev/snd \
-		--name ubuntu-desktop-lxde-test \
-		$(REPO):$(TAG)
+		--name vnc-ros-noetic-full-test \
+		$(REPO_TEST):$(TAG)
 
 # Connect inside the running container for debugging
 shell:
-	docker exec -it ubuntu-desktop-lxde-test bash
+	docker exec -it vnc-ros-noetic-full-test bash
 
 # Generate the SSL/TLS config for HTTPS
 gen-ssl:
